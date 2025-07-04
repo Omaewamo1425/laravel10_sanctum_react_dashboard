@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FocusTrap } from "focus-trap-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion  } from "framer-motion";
 
 export default function Modal({ open, onClose, title, children }) {
   const [mounted, setMounted] = useState(open);
