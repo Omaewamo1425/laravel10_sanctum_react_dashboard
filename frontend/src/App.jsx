@@ -8,12 +8,14 @@ import { setUser, clearAuth } from "./store/authSlice";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import User from "./pages/user_management/UserList";
-import Permission from "./pages/permission/PermissionList";
-import Role from "./pages/role/RoleList";
+import User from "./pages/user_management/user/UserList";
+import Permission from "./pages/user_management/permission/PermissionList";
+import Role from "./pages/user_management/role/RoleList";
 import Forbidden from "./pages/Forbidden";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PageLoader from "./components/common/PageLoader"; 
+import SelectSystem from "./pages/SelectSystem";
+import { System } from "./pages/maintenance/system/System";
 
 export default function App() {
   const token = useSelector((state) => state.auth.token);
@@ -49,7 +51,7 @@ export default function App() {
       <Routes>
         <Route
           path="/login"
-          element={!token ? <Login /> : <Navigate to="/dashboard" />}
+          element={!token ? <Login /> : <Navigate to="/home" />}
         />
 
         <Route
@@ -60,6 +62,24 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/home"
+          element={
+            <SelectSystem />
+          }
+        />
+        {/* MAINTENANCE */}
+
+        <Route
+          path="/system"
+          element={
+            <ProtectedRoute >
+              <System />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* USER MANAGEMENT */}
 
         <Route
           path="/users"
@@ -75,6 +95,15 @@ export default function App() {
           element={
             <ProtectedRoute permission="view-permissions">
               <Permission />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/role"
+          element={
+            <ProtectedRoute permission="view-roles">
+              <Role />
             </ProtectedRoute>
           }
         />

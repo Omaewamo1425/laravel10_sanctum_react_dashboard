@@ -34,7 +34,7 @@ export default function Login() {
        dispatch(setUser(user)); // Make sure this matches your reducer's expectation
 
       // Navigate after state is updated
-      navigate("/dashboard");
+      navigate("/home");
     } catch (err) {
   console.error("Login failed", err);
   alert(err?.response?.data?.message || "Something went wrong");
@@ -63,7 +63,6 @@ export default function Login() {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Logging in...
             </>
           ) : (
             "Login"

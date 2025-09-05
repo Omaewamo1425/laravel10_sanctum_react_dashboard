@@ -1,5 +1,5 @@
 import React from "react";
-import Modal from "../custom_modal/Modal";
+import Modal from "../../custom_modal/Modal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";

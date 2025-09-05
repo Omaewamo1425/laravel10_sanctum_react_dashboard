@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { clearAuth } from "../store/authSlice";
+import { clearSystem } from "../store/systemSlice";
 
 export default function Navbar({ onToggleSidebar, applyTheme, isDark }) {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ export default function Navbar({ onToggleSidebar, applyTheme, isDark }) {
         headers: { Authorization: `Bearer ${token}` },
       });
       dispatch(clearAuth());
+      dispatch(clearSystem());
       localStorage.removeItem("token");
       window.location.href = "/login";
     } catch (e) {

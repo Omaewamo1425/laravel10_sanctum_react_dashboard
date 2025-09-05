@@ -3,9 +3,9 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import DataTableServer from "@/components/tables/DataTableServer";
-import RoleFormModal from "@/components/role/RoleFormModal";
 import { showToast } from "@/utils/toast";
 import { confirmAction } from "@/utils/confirm";
+import RoleFormModal from "@/components/user_management/role/RoleFormModal";
 
 export default function RoleList() {
   const token = useSelector((state) => state.auth.token);

@@ -4,13 +4,44 @@ import { AnimatePresence, motion } from "framer-motion";
 import { hasPermission } from "@/utils/permissions";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import { Home, Users, ShieldCheck, Settings } from "lucide-react";
+import { Home, Users, ShieldCheck, Settings, MonitorCog } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const navLinks = [
   { to: "/dashboard", label: "Dashboard", icon: Home },
-  { to: "/users", label: "Users", icon: Users, permission: "view-users" },
-  { to: "/permission", label: "Permission", icon: ShieldCheck, permission: "view-roles" },
-  { to: "/role", label: "Role", icon: Settings, permission: "view-roles" },
+  {
+    label: "Maintenance",
+    icon: Settings,
+    children: [
+      {
+        to: "/system",
+        label: "Systems",
+        icon: MonitorCog,
+        permission: "view-roles",
+      },
+
+    ],
+  },
+  {
+    label: "User Management",
+    icon: Users,
+    children: [
+      { to: "/users", label: "Users", icon: Users, permission: "view-users" },
+      {
+        to: "/permission",
+        label: "Permission",
+        icon: ShieldCheck,
+        permission: "view-roles",
+      },
+      {
+        to: "/role",
+        label: "Role",
+        icon: Settings,
+        permission: "view-roles",
+      },
+    ],
+  },
+  
 ];
 
 export default function Layout({ children }) {
@@ -18,6 +49,7 @@ export default function Layout({ children }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const { permissions, loading } = useSelector((state) => state.auth);
+  const location = useLocation();
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") || "system";
@@ -36,9 +68,22 @@ export default function Layout({ children }) {
     setIsDark(isDarkMode);
   };
 
-  const visibleLinks = navLinks.filter(
-    ({ permission }) => !permission || hasPermission(permissions, permission)
-  );
+  const filterLinks = (links) =>
+    links
+      .filter(
+        ({ permission, children }) =>
+          !permission ||
+          hasPermission(permissions, permission) ||
+          (children &&
+            children.some((c) => !c.permission || hasPermission(permissions, c.permission)))
+      )
+      .map((link) =>
+        link.children
+          ? { ...link, children: filterLinks(link.children) }
+          : link
+      );
+
+  const visibleLinks = filterLinks(navLinks);
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
@@ -48,6 +93,7 @@ export default function Layout({ children }) {
           sidebarCollapsed={sidebarCollapsed}
           visibleLinks={visibleLinks}
           toggleSidebar={(open) => setSidebarOpen(open)}
+          permissions={permissions}
         />
       )}
 

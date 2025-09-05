@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\role\RoleController;
 use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\maintenance\SystemController;
 use App\Http\Controllers\user_management\UserController;
 use App\Http\Controllers\permission\PermissionController;
 
@@ -52,4 +54,26 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/permissions', [PermissionController::class, 'store']);
     Route::put('/permissions/{permission}', [PermissionController::class, 'update']);
     Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy']);
+
+    Route::get('/systems/read', [SystemController::class, 'read']);
+    Route::get('/systems', [SystemController::class, 'index']);
+    Route::post('/systems', [SystemController::class, 'store']);
+    Route::get('/systems/{system}', [SystemController::class, 'edit']);
+});
+
+
+Route::get('/vehicle', function () {
+    $vehicles = DB::connection('etrans3')
+        ->table('vehicles')
+        ->get();
+
+    return response()->json($vehicles);
+});
+
+Route::get('/employee', function () {
+    $employees = DB::connection('hris')
+        ->table('employees')
+        ->get();
+
+    return response()->json($employees);
 });

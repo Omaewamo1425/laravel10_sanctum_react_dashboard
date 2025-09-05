@@ -6,7 +6,7 @@ import { hasPermission } from "@/utils/permissions";
 import { showToast } from "@/utils/toast";
 import { confirmAction } from "@/utils/confirm";
 import axios from "axios";
-import UserFormModal from "@/components/UserFormModal";
+import UserFormModal from "@/components/user_management/user/UserFormModal";
 
 export default function UserList() {
   const token = useSelector((state) => state.auth.token);

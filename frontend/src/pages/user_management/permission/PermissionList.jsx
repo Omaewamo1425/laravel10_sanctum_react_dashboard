@@ -3,9 +3,9 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import DataTableServer from "@/components/tables/DataTableServer";
-import PermissionFormModal from "@/components/permission/PermissionFormModal";
 import { showToast } from "@/utils/toast";
 import { confirmAction } from "@/utils/confirm";
+import PermissionFormModal from "@/components/user_management/permission/PermissionFormModal";
 
 export default function PermissionList() {
   const token = useSelector((state) => state.auth.token);
