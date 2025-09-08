@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\role\RoleController;
 use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\maintenance\SystemController;
+use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\user_management\UserController;
 use App\Http\Controllers\permission\PermissionController;
 
@@ -59,6 +60,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/systems', [SystemController::class, 'index']);
     Route::post('/systems', [SystemController::class, 'store']);
     Route::get('/systems/{system}', [SystemController::class, 'edit']);
+});
+
+Route::middleware(['auth:sanctum', 'system.connection'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
 });
 
 

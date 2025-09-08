@@ -12,12 +12,13 @@ const navLinks = [
   {
     label: "Maintenance",
     icon: Settings,
+    permission: ["view-system"],
     children: [
       {
         to: "/system",
         label: "Systems",
         icon: MonitorCog,
-        permission: "view-roles",
+        permission: "view-system",
       },
 
     ],
@@ -25,13 +26,14 @@ const navLinks = [
   {
     label: "User Management",
     icon: Users,
+    permission: ["view-permissions", "view-roles", "view-users"],
     children: [
       { to: "/users", label: "Users", icon: Users, permission: "view-users" },
       {
         to: "/permission",
         label: "Permission",
         icon: ShieldCheck,
-        permission: "view-roles",
+        permission: "view-permissions",
       },
       {
         to: "/role",
@@ -68,20 +70,28 @@ export default function Layout({ children }) {
     setIsDark(isDarkMode);
   };
 
+  const hasAnyPermission = (permission, permissions) => {
+    if (!permission) return true;
+    if (Array.isArray(permission)) {
+      return permission.some((p) => hasPermission(permissions, p));
+    }
+    return hasPermission(permissions, permission);
+  };
+
   const filterLinks = (links) =>
-    links
-      .filter(
-        ({ permission, children }) =>
-          !permission ||
-          hasPermission(permissions, permission) ||
-          (children &&
-            children.some((c) => !c.permission || hasPermission(permissions, c.permission)))
-      )
-      .map((link) =>
-        link.children
-          ? { ...link, children: filterLinks(link.children) }
-          : link
-      );
+  links
+    .filter(({ permission }) => hasAnyPermission(permission, permissions))
+    .map((link) =>
+      link.children
+        ? {
+            ...link,
+            children: link.children.filter((child) =>
+              hasAnyPermission(child.permission, permissions)
+            ),
+          }
+        : link
+    );
+
 
   const visibleLinks = filterLinks(navLinks);
 

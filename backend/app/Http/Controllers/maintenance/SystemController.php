@@ -5,9 +5,12 @@ namespace App\Http\Controllers\maintenance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\maintenance\system\System;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SystemController extends Controller
 {
+    use AuthorizesRequests;
+    
     public function index()
     {
         return System::all()->where('is_active', 1);
@@ -32,6 +35,9 @@ class SystemController extends Controller
 
     public function store(Request $request)
     {
+
+        $this->authorize('create-system');
+        
         $validated = $request->validate([
             'system_name' => 'required|string|unique:systems,system_name',
             'is_active' => 'required|boolean',

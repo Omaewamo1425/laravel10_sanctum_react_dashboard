@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { Sun, Moon, Bell, User, LogOut } from "lucide-react";
+import { Sun, Moon, Bell, User, LogOut, MonitorCog } from "lucide-react";
 import {
   Avatar, AvatarFallback, AvatarImage,
 } from "@/components/ui/avatar";
@@ -12,12 +12,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { clearAuth } from "../store/authSlice";
 import { clearSystem } from "../store/systemSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar({ onToggleSidebar, applyTheme, isDark }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const user = useSelector((state) => state.auth.user);
   const [notificationCount] = useState(2);
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     const token = localStorage.getItem("token");
@@ -103,6 +105,9 @@ export default function Navbar({ onToggleSidebar, applyTheme, isDark }) {
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" /> Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => {navigate('/home')}} className="text-red-600">
+              <MonitorCog className="mr-2 h-4 w-4" /> Select System
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogout} className="text-red-600">
               <LogOut className="mr-2 h-4 w-4" /> Logout

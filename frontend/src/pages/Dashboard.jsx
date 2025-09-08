@@ -1,18 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import axios from "axios";
 import LineChartCard from "@/components/charts/LineChartCard";
 import BarChartCard from "@/components/charts/BarChartCard";
 import AreaChartCard from "@/components/charts/AreaChartCard";
 import PieChartCard from "@/components/charts/PieChartCard";
 import DoughnutChartCard from "@/components/charts/DoughnutChartCard";
 import RadarChartCard from "@/components/charts/RadarChartCard";
+import { useAppContext } from "@/hooks/useAppContext";
+import { showToast } from "@/utils/toast";
 
 export default function Dashboard() {
   const [startDate, setStartDate] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)));
   const [endDate, setEndDate] = useState(new Date());
   const [data, setData] = useState([]);
+  const {system_id, token } = useAppContext();
+
+
+  const fetchDashboardData = useCallback(async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/dashboard", {
+        headers: { Authorization: `Bearer ${token}`,  "X-System-ID": system_id },
+      });
+      return res.data;
+    } catch {
+      showToast("Failed to load systems", "error");
+    }
+  }, [token]);
 
   useEffect(() => {
     const fetchData = () => {
@@ -26,6 +41,10 @@ export default function Dashboard() {
     };
     fetchData();
   }, [startDate, endDate]);
+  
+   useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   return (
     <div className="space-y-6">
